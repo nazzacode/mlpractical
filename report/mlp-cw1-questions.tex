@@ -1,5 +1,5 @@
 %% REPLACE sXXXXXXX with your student number
-\def\studentNumber{sXXXXXXX}
+\def\studentNumber{s1869292}
 
 
 %% START of YOUR ANSWERS
@@ -22,15 +22,18 @@
 
 %% - - - - - - - - - - - - TEXT QUESTIONS - - - - - - - - - - - - 
 
+% -- Overfitting --
+% as giving a model more free parameters (without complimentary constraints), it will use them better fit the precise data-points, blind to trading off simplicity, which improves generalisation.
+
 %% Question 1:
 \newcommand{\questionOne} {
-\youranswer{Question 1 - Define overfitting}
+\youranswer{when a model fits the data in the training set well, while incurring larger generalisation error. In practice this often realised by a large gap between the training and test error.}
 }
 
 %% Question 2:
 \newcommand{\questionTwo} {
-\youranswer{Question 2 - Summarise the effect increasing width and depth of the architecture had on overfitting}
-}
+\youranswer{(in the absence of countermeasures) systematically worsens the problem of overfitting, impairing model performance.}}
+% TODO why?
 
 %% Question 3:
 \newcommand{\questionThree} {
@@ -39,68 +42,90 @@
 
 %% Question 4:
 \newcommand{\questionFour} {
-\youranswer{Question 4 - Give your overall conclusions}
+  \youranswer{Question 4 - Give your overall conclusions}
 }
 
-%% Question 5:
+%% Question 5: Explain what overfitting is in detail and in your own words
 \newcommand{\questionFive} {
-\youranswer{Question 5 - Explain what overfitting is in detail and in your own words}
-}
+\youranswer{it fits the data in the training set well, while incurring larger generalisation error, meaning the model will not perform accurately on unseen data. This is a principle issue in machine learning as performance on unseen data is the fundamental test of an ML model and what separates it from a pure information-complete optimisation problem}}
 
-%% Question 6:
+%% Question 6: Discuss why and how overfitting occurs, and how one can identify it is happening
 \newcommand{\questionSix} {
-\youranswer{Question 6 - Discuss ``why'' and ``how'' overfitting occurs, and ``how'' one can identify it is happening}
-}
+\youranswer{Overfitting occurs due to the presence of random variation, noise, and the limited size of the training data. These factors will naturally lead to a model of sufficient size evolving to use and depend on this random, non-(externally-)predictive information. Overfitting is prototypically identified by stagnating or regressing performance on unseen data as a model continues to improve on previously seen data.}}
+% TODO put a figure in?
 
 %% Question 7:
+% Explain what these figures contain and how the curves evolve, and spot where overfitting occurs. Reason based on the min/max points and velocities (direction and magnitude of change) of the accuracy and error curves
 \newcommand{\questionSeven} {
-\youranswer{Question 7 - Explain what these figures contain and how the curves evolve, and spot where overfitting occurs. Reason based on the min/max points and velocities (direction and magnitude of change) of the accuracy and error curves}
-}
+\youranswer{initially accuracy on both the training validation data improve rapidly, however they quickly diverge. performance on the training set continues to improve (logarithmically) meanwhile the validation accuracy quickly peaks (at approx. epoch=15) and then begins over fitting; with a brief platau followed by a steadily decline to a final \textit{generalisation gap}\footnote{The generalisation gap is the models final training accuracy/error minus its final validation accuracy/error} of 0.13. Similar results are shown in~\ref{fig:example_errorcurves}, this time with a more extreme final generalisation gap of $\approx$~0.80.}}
 
 %% Question 8:
+% Explain your network width experiment results by using the relevant figure and table}
 \newcommand{\questionEight} {
-\youranswer{Question 8 - Explain your network width experiment results by using the relevant figure and table}
-}
+\youranswer{the generalisation gap increases as you increase the width (size) of the model (Table~\ref{tab:width_exp}). We can see how this gap evolves in Figures~\ref{fig:width_acccurves} and~\ref{fig:width_errorcurves}, where overfitting can be seen visibly-- beginning where the performance on the validation data (dotted line) stops improving or starts regressing, whilst performance on the training data (solid) continues to improve its fit.}}
 
 %% Question 9:
+% Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
 \newcommand{\questionNine} {
-\youranswer{Question 9 - Discuss whether varying width affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
-}
+\youranswer{From analysing Figures~\ref{fig:width_acccurves} and~\ref{fig:width_errorcurves}, we observe that as the model width increases, this systematically worsens the problem of overfitting, as is considerably worse in the largest model than the smaller two. Of particular note is the error graph of the model with a width of 128, having by far the most extreme performance drop-off on the unseen data, strongly supporting our experimental hypothesis that increasing model size increases overfitting (in line with the reviewed theory and literature (Ch.~5 in \citealt{Goodfellow-et-al-2016}))}}
 
 %% Question 10:
+%Explain your network depth experiment results by using the relevant figure and table
 \newcommand{\questionTen} {
-\youranswer{Question 10 - Explain your network depth experiment results by using the relevant figure and table}
-}
+\youranswer{similar to increasing the width of the network, we can see overfitting in every model and adding hidden layers to the network, increased the generalisation gap and worsened overfitting.}}
+% (see \ref{subsec:network_width})
 
 %% Question 11:
+% Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)
 \newcommand{\questionEleven} {
-\youranswer{Question 11 - Discuss whether varying depth affects the results in a consistent way, and whether the results are expected and match well with the prior knowledge (by which we mean your expectations as are formed from the relevant Theory and literature)}
-}
+  \youranswer{Overfitting was considerably more pronounced in the largest model (3 hidden layers), again mirroring the results of the network width experiment. This is in line with the theory as both increase the number of free parameters in the model.}}
 
 %% Question 12:
+%% Compare and discuss how varying width and height changes the performance and overfitting in your experiments
 \newcommand{\questionTwelve} {
-\youranswer{Question 12 - Compare and discuss how varying width and height changes the performance and overfitting in your experiments}
-}
+  \youranswer{Overall our experimental results on varying the width and depth of neural networks strongly support the literature, suggesting that vanilla neural networks are prone to overfitting and that increasing the width or depth of such models will worsen overfitting. The functional relationship here seems somewhat complex but in our limited scope, the problem of overfitting seems to worsen gradually then more rapidly as you increase the size of the model. To test further, we would want to run more experiments with a greater range of model input parameters.}}
 
 %% Question 13:
+% Explain L1/L2 weight penalties first in words and then with formulas. Explain how they are incorporated to training and what hyperparameter(s) they require
 \newcommand{\questionThirteen} {
-\youranswer{Question 13 - Explain L1/L2 weight penalties first in words and then with formulas. Explain how they are incorporated to training and what hyperparameter(s) they require}
-}
+\youranswer{Both L1 and L2 weight penalties are a form of \textit{regularisation} \ref{Goodfellow}. Regularisation is a countermeasure to overfitting that generally involves imposing some sort of smoothness constraint on a learned model. L1/L2 regularisation works by a penalty term that encourages the sum/squared-sum of the (absolute) values of the weights to be smaller, resulting in weights that shrink at a small rate towards 0, determined by hyperparameter $\lambda$.
+
+In both L1 and L2 regularisation, forward propagation remains identical whilst the error function has a penalty term added scaled by a constant factor as shown:
+
+\begin{align}
+  E_{L_1} &= E(y,\hat{y}) + \lambda \sum_{i=1}^{N}{|w_i|} \\
+  E_{L_2} &= E(y,\hat{y}) + \lambda \sum_{i=1}^{N}{w_i^{2}}
+\end{align}
+
+where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vector of size $N$. The scaling factor, $\lambda$, is the single manually tuned hyperparameter, controlling the size of the penalty. It typically takes values from $0.1$ to $1^{-5}$
+
+% TODO Backwards Propagation
+
+}}
 
 %% Question 14:
+% Discuss how/why the weight penalties may address overfitting, discuss how L1 and L2 regularization differ and support your claims with references where possible
 \newcommand{\questionFourteen} {
-\youranswer{Question 14 - Discuss how/why the weight penalties may address overfitting, discuss how L1 and L2 regularization differ and support your claims with references where possible}
-}
+\youranswer{A intuitive way to think about the difference between L1 and L2 is that, in L1 regularisation weights shrink at a constant rate towards zero so will tend to shrink a lot of weights to zero. L2 regularisation puts a “spring” on weights that tends to zero. If a connection has consistent force, it should outweigh the L2 decay. Both L1 and L2 regularisation can be thought of as encouraging only the most important features in the network\cite{ng2004feature}.  This is an obvious countermeasure to overfitting as tunes the model to ignore weakly predictive inputs in favour of a more simple, sparse model.}}
 
 %% Question 15:
+% Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalization performance and overfitting}
 \newcommand{\questionFifteen} {
-\youranswer{Question 15 - Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalization performance and overfitting}
+\youranswer{}
 }
 
 %% Question 16:
+% Explain the motivation behind Maxout Networks as presented in \cite{goodfellow2013maxout}}
 \newcommand{\questionSixteen} {
-\youranswer{Question 16 - Explain the motivation behind Maxout Networks as presented in \cite{goodfellow2013maxout}}
-}
+\youranswer{
+  - Dropout is generally viewed as an indiscriminately applicable tool that reliably yields a modest improvement in performance when applied to almost any model
+
+  - the best performance may be obtained by directly designing a model that enhances dropout’s abilities as a model averaging technique
+
+  - The ideal operating regime for dropout is when the overall training procedure resembles training an ensemble with bagging under parameter sharing constraints. This differs radically from the ideal stochastic gradient operating regime in which a single model makes steady progress via small steps.
+
+  -
+}}
 
 %% Question 17:
 \newcommand{\questionSeventeen} {
@@ -112,28 +137,31 @@
 \youranswer{Question 18 - Give an overview of the experiment setup in \cite{goodfellow2013maxout} and analyse it from the point of view of how convincing their conclusions are}
 }
 
-%% Question 19:
-\newcommand{\questionNineteen} {
-\youranswer{Question 19 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?) and conclude your report with a recommendation for future directions}
-}
 
+%% Question 19:
+% Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?) and conclude your report with a recommendation for future directions
+\newcommand{\questionNineteen} {
+\youranswer{
+  - Simpler models are less likely to over-fit than complex ones.
+}
+}
 
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
 
 %% Question Figure 2:
+%%  Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
 \newcommand{\questionFigureTwo} {
-\youranswer{Question Figure 2 - Replace the images in Figure 2 with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden units.
-%
+\youranswer{
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_acc_curve_width.png}
+        \includegraphics[width=\linewidth]{figures/acc_curve_width.pdf}
         \caption{accuracy by epoch}
         \label{fig:width_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_error_curve_width.png}
+        \includegraphics[width=\linewidth]{figures/error_curve_width.pdf}
         \caption{error by epoch}
         \label{fig:width_errorcurves}
     \end{subfigure} 
@@ -144,19 +172,19 @@
 }
 
 %% Question Figure 3:
+% Replace these images with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden layers.
 \newcommand{\questionFigureThree} {
-\youranswer{Question Figure 3 - Replace these images with figures depicting the accuracy and error, training and validation curves for your experiments varying the number of hidden layers.
-%
+\youranswer{
 \begin{figure}[t]
     \centering
     \begin{subfigure}{\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_acc_curve_depth.png}
+        \includegraphics[width=\linewidth]{figures/acc_curve_depth.pdf}
         \caption{accuracy by epoch}
         \label{fig:depth_acccurves}
     \end{subfigure} 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_error_curve_depth.png}
+        \includegraphics[width=\linewidth]{figures/error_curve_depth.pdf}
         \caption{error by epoch}
         \label{fig:depth_errorcurves}
     \end{subfigure} 
@@ -200,17 +228,15 @@
 %% Question Table 1:
 \newcommand{\questionTableOne} {
 \youranswer{
-Question Table 1 - Fill in Table 1 with the results from your experiments varying the number of hidden units.
-%
 \begin{table}[t]
     \centering
     \begin{tabular}{c|cc}
     \toprule
         \# hidden units & val. acc. & generalization gap \\
     \midrule
-         32            &            &                    \\
-         64            &            &                    \\
-         128           &            &                    \\ 
+         32            &     0.78       &      0.04              \\
+         64            &     0.81       &      0.05              \\
+         128           &     0.80       &      0.14              \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and generalization gap (in terms of cross-entropy error) for varying network widths on the EMNIST dataset.}
@@ -222,17 +248,15 @@ Question Table 1 - Fill in Table 1 with the results from your experiments varyin
 %% Question Table 2:
 \newcommand{\questionTableTwo} {
 \youranswer{
-Question Table 2 - Fill in Table 2 with the results from your experiments varying the number of hidden layers.
-%
 \begin{table}[t]
     \centering
     \begin{tabular}{c|cc}
     \toprule
         \# hidden layers & val. acc. & generalization gap \\
     \midrule
-         1               &            &                    \\
-         2               &            &                    \\
-         3               &            &                    \\ 
+         1               & 0.78      & 0.04               \\
+         2               & 0.81      & 0.07               \\
+         3               & 0.80      & 0.14               \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and generalization gap (in terms of cross-entropy error) for varying network depths on the EMNIST dataset.}
@@ -242,41 +266,41 @@ Question Table 2 - Fill in Table 2 with the results from your experiments varyin
 }
 
 %% Question Table 3:
+% Fill in Table 3 with the results from your experiments varying the hyperparameter values for each of L1 regularisation, L2 regularisation, and Dropout (use the values shown on the table) as well as the results for your experiments combining L1/L2 and Dropout (you will have to pick what combinations of hyperparameter values to test for the combined experiments; each of the combined experiments will need to use Dropout and either L1 or L2 regularisation; run an experiment for each of 8 different combinations). Use \textit{italics} to print the best result per criterion for each set of experiments, and \textbf{bold} for the overall best result per criterion.
+%
 \newcommand{\questionTableThree} {
 \youranswer{
-Question Table 3 - Fill in Table 3 with the results from your experiments varying the hyperparameter values for each of L1 regularisation, L2 regularisation, and Dropout (use the values shown on the table) as well as the results for your experiments combining L1/L2 and Dropout (you will have to pick what combinations of hyperparameter values to test for the combined experiments; each of the combined experiments will need to use Dropout and either L1 or L2 regularisation; run an experiment for each of 8 different combinations). Use \textit{italics} to print the best result per criterion for each set of experiments, and \textbf{bold} for the overall best result per criterion.
-%
 \begin{table*}[t]
     \centering
     \begin{tabular}{c|c|cc}
     \toprule
-        Model    &  Hyperparameter value(s) & Validation accuracy & Generalization gap \\
+        Model &  Hyperparameter value(s) & Validation accuracy & Generalisation gap \\
     \midrule
     \midrule
-        Baseline &  -                    &               0.836 &                 0.290 \\
+     Baseline &  -                       &               0.836 &              0.290 \\
     \midrule
-        \multirow{3}*{Dropout}
-                 & 0.7                   &                     &                   \\
-                 & 0.9                   &                     &                   \\
-                 & 0.95                  &                     &                   \\
+       \multirow{3}*{Dropout}
+              & 0.7                      &               0.840 &     \textit{0.031} \\
+              & 0.9                      &      \textit{0.853} &              0.068 \\
+              & 0.95                     &               0.844 &              0.092 \\
     \midrule
         \multirow{3}*{L1 penalty}
-                 & 1e-4                   &                     &                   \\
-                 & 1e-3                   &                     &                   \\
-                 & 1e-1                   &                     &                   \\
+              & 1e-4                     &      \textit{0.851} &             0.035 \\
+              & 1e-3                     &               0.799 &             0.550 \\
+              & 1e-1                     &               0.020 &    \textit{0.002} \\
     \midrule
         \multirow{3}*{L2 penalty}  
-                 & 1e-4                   &                     &                   \\
-                 & 1e-3                   &                     &                   \\
-                 & 1e-1                   &                     &                   \\
+              & 1e-4                     &               0.832 &             0.106 \\
+              & 1e-3                     &      \textit{0.855} &             0.035 \\
+              & 1e-1                     &               0.648 &    \textit{-0.01} \\
     \midrule
         \multirow{6}*{Combined}  
-                 & for example 0.95, L1 1e-6  &                     &                   \\
-                 & ?, ?                   &                     &                   \\
-                 & ?, ?                   &                     &                   \\
-                 & ?, ?                   &                     &                   \\
-                 & ?, ?                   &                     &                   \\
-                 & ?, ?                   &                     &                   \\
+              & 0.7, L1 1e-4             &               0.826 &             0.006 \\
+              & ?, ?                     &                     &                   \\
+              & ?, ?                     &                     &                   \\
+              & ?, ?                     &                     &                   \\
+              & ?, ?                     &                     &                   \\
+              & ?, ?                     &                     &                   \\
     \bottomrule
     \end{tabular}
     \caption{Results of all hyperparameter search experiments. \emph{italics} indicate the best results per series and \textbf{bold} indicate the best overall}

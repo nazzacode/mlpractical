@@ -1,0 +1,46 @@
+(TeX-add-style-hook
+ "mlp-cw1-questions"
+ (lambda ()
+   (TeX-add-symbols
+    "questionOne"
+    "questionTwo"
+    "questionThree"
+    "questionFour"
+    "questionFive"
+    "questionSix"
+    "questionSeven"
+    "questionEight"
+    "questionNine"
+    "questionTen"
+    "questionEleven"
+    "questionTwelve"
+    "questionThirteen"
+    "questionFourteen"
+    "questionFifteen"
+    "questionSixteen"
+    "questionSeventeen"
+    "questionEighteen"
+    "questionNineteen"
+    "questionFigureTwo"
+    "questionFigureThree"
+    "questionFigureFour"
+    "questionTableOne"
+    "questionTableTwo"
+    "questionTableThree"
+    "studentNumber")
+   (LaTeX-add-labels
+    "fig:width_acccurves"
+    "fig:width_errorcurves"
+    "fig:width"
+    "fig:depth_acccurves"
+    "fig:depth_errorcurves"
+    "fig:depth"
+    "fig:dropoutrates"
+    "fig:weightrates"
+    "fig:extra"
+    "fig:hp_search"
+    "tab:width_exp"
+    "tab:depth_exps"
+    "tab:hp_search"))
+ :latex)
+
