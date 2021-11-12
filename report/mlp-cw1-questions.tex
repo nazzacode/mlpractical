@@ -36,14 +36,15 @@
 % TODO why?
 
 %% Question 3:
+% Summarise what your results show you about the effect of the tested approaches on overfitting and the performance of the trained model
 \newcommand{\questionThree} {
-\youranswer{Question 3 - Summarise what your results show you about the effect of the tested approaches on overfitting and the performance of the trained model}
-}
+\youranswer{ a combination of Dropout and L2 weight penalty have the best performance in the dataset, however both Dropout and Weight penalty perform almost as well by themselves}}
 
 %% Question 4:
+% Give your overall conclusions
 \newcommand{\questionFour} {
-  \youranswer{Question 4 - Give your overall conclusions}
-}
+\youranswer{ Dropout and weight decay are simple and cheap methods to improve performance and reduce overfitting on the EMNIST dataset.
+}}
 
 %% Question 5: Explain what overfitting is in detail and in your own words
 \newcommand{\questionFive} {
@@ -57,7 +58,7 @@
 %% Question 7:
 % Explain what these figures contain and how the curves evolve, and spot where overfitting occurs. Reason based on the min/max points and velocities (direction and magnitude of change) of the accuracy and error curves
 \newcommand{\questionSeven} {
-\youranswer{initially accuracy on both the training validation data improve rapidly, however they quickly diverge. performance on the training set continues to improve (logarithmically) meanwhile the validation accuracy quickly peaks (at approx. epoch=15) and then begins over fitting; with a brief platau followed by a steadily decline to a final \textit{generalisation gap}\footnote{The generalisation gap is the models final training accuracy/error minus its final validation accuracy/error} of 0.13. Similar results are shown in~\ref{fig:example_errorcurves}, this time with a more extreme final generalisation gap of $\approx$~0.80.}}
+\youranswer{initially accuracy on both the training validation data improve rapidly, however they quickly diverge. performance on the training set continues to improve (logarithmically) meanwhile the validation accuracy quickly peaks (at approx. epoch=15) and then begins over fitting; with a brief plateau followed by a steadily decline to a final \textit{generalisation gap}\footnote{The generalisation gap is the models final training accuracy/error minus its final validation accuracy/error} of 0.13. Similar results are shown in~\ref{fig:example_errorcurves}, this time with a more extreme final generalisation gap of $\approx$~0.80.}}
 
 %% Question 8:
 % Explain your network width experiment results by using the relevant figure and table}
@@ -72,7 +73,7 @@
 %% Question 10:
 %Explain your network depth experiment results by using the relevant figure and table
 \newcommand{\questionTen} {
-\youranswer{similar to increasing the width of the network, we can see overfitting in every model and adding hidden layers to the network, increased the generalisation gap and worsened overfitting.}}
+\youranswer{similar to increasing the width of the network, we can see significant overfitting in every model. Adding hidden layers to the network, increased the generalisation gap and worsened overfitting.}}
 % (see \ref{subsec:network_width})
 
 %% Question 11:
@@ -97,45 +98,51 @@ In both L1 and L2 regularisation, forward propagation remains identical whilst t
   E_{L_2} &= E(y,\hat{y}) + \lambda \sum_{i=1}^{N}{w_i^{2}}
 \end{align}
 
-where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vector of size $N$. The scaling factor, $\lambda$, is the single manually tuned hyperparameter, controlling the size of the penalty. It typically takes values from $0.1$ to $1^{-5}$
-
+where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vector of size $N$. The scaling factor, $\lambda$, is the single manually tuned hyperparameter, controlling the size of the penalty. It typically takes values from $0.1$ to $1^{-5}$}}
 % TODO Backwards Propagation
-
-}}
 
 %% Question 14:
 % Discuss how/why the weight penalties may address overfitting, discuss how L1 and L2 regularization differ and support your claims with references where possible
 \newcommand{\questionFourteen} {
-\youranswer{A intuitive way to think about the difference between L1 and L2 is that, in L1 regularisation weights shrink at a constant rate towards zero so will tend to shrink a lot of weights to zero. L2 regularisation puts a “spring” on weights that tends to zero. If a connection has consistent force, it should outweigh the L2 decay. Both L1 and L2 regularisation can be thought of as encouraging only the most important features in the network\cite{ng2004feature}.  This is an obvious countermeasure to overfitting as tunes the model to ignore weakly predictive inputs in favour of a more simple, sparse model.}}
+\youranswer{A intuitive way to think about the difference between L1 and L2 regularisation is that in L1 regularisation weights shrink at a constant rate towards zero so will tend to shrink a lot of weights to zero. L2 regularisation puts a “spring” on weights that tends to zero. If a connection has consistent force, it should outweigh the L2 decay. Both L1 and L2 regularisation can be thought of as encouraging only the most important features in the network~\cite{ng2004feature}.  This is an obvious countermeasure to overfitting as tunes the model to ignore weakly predictive inputs in favour of a more simple, sparse model.}}
+% TODO finish reading
+% Expand
 
 %% Question 15:
 % Explain the experimental details (e.g. hyperparameters), discuss the results in terms of their generalization performance and overfitting}
 \newcommand{\questionFifteen} {
-\youranswer{}
-}
+\youranswer{Next we used these preliminary results to pick the most promising hyperparameters for combining the methods, running six further experiments.
+
+Overall all three methods tested improved performance. The highest single-method accuracy score was 0.855 (its generalisation gap was 0.035), from $L2=1e-3$ whilst Dropout and L1 managed accuracies 0.853 and 0.851 respectively.
+
+Clearly looking at Table~\ref{tab:hp_search}, there are some very poorly performing models, most notably $L1=1e-1$. Looking at the training graph (not shown) its confirmed that that this model failed to converge at all. One probable reason for this is that the penalty hyperparameter is set to high and overpowers the model. A similar but less extreme story occurs $L2=1e-1$. There's clearly a trade-off here between accuracy and overfitting when increasing penalty size, as shown in Fig.~\ref{fig:weightrates}.
+
+When combining the methods, I immediately discounted the underperforming high penalty models discussed earlier, then tried to mix the remaining value all of which I thought were viable hyperparameter values, with a bias to the best accuracy performers.
+
+The chosen hyperparameter values can be seen in Table~\ref{tab:hp_search}. All the results are shown in Fig.~\ref{fig:hp_search}. The best overall performance found was with dropout=0.9 and L2=1e-3, yielding an validation set accuracy of 0.858 and an test set accuracy of 0.848 This was a direct combination of the best performing individual models.}}
 
 %% Question 16:
 % Explain the motivation behind Maxout Networks as presented in \cite{goodfellow2013maxout}}
 \newcommand{\questionSixteen} {
-\youranswer{
-  - Dropout is generally viewed as an indiscriminately applicable tool that reliably yields a modest improvement in performance when applied to almost any model
-
-  - the best performance may be obtained by directly designing a model that enhances dropout’s abilities as a model averaging technique
-
-  - The ideal operating regime for dropout is when the overall training procedure resembles training an ensemble with bagging under parameter sharing constraints. This differs radically from the ideal stochastic gradient operating regime in which a single model makes steady progress via small steps.
-
-  -
-}}
+\youranswer{it had not yet been proven to truly be performing model averaging, specifically for deep architectures. However, it turns out this was confirmed by \cite{srivastava2014dropout} before the paper was published. Additionally, they felt dropout was a indiscriminate ``blunt'' tool that could be better tuned to the problem instance.}}
 
 %% Question 17:
+% State whether Dropout is compatible (can be used together) with Maxout and explain why}
 \newcommand{\questionSeventeen} {
-\youranswer{Question 17 - State whether Dropout is compatible (can be used together) with Maxout and explain why}
-}
+\youranswer{Maxout can be used in combination with dropout and is designed to complement it. This is because maxout is simply a type of learned activation function.}}
+% A single maxout unit can be interpreted as making a piecewise linear approximation to an arbitrary convex function
+%
+% Maxout networks learn not just the relationship between hidden units, but also the activation function of each hidden unit
+%
+
 
 %% Question 18:
+% Give an overview of the experiment setup in \cite{goodfellow2013maxout} and analyse it from the point of view of how convincing their conclusions are}
 \newcommand{\questionEighteen} {
-\youranswer{Question 18 - Give an overview of the experiment setup in \cite{goodfellow2013maxout} and analyse it from the point of view of how convincing their conclusions are}
-}
+\youranswer{
+  - tested on 5 benchmarks data sets
+  - Only the best if you dont count unsupervised pre-training/clustering/pre-regularisation
+}}
 
 
 %% Question 19:
@@ -195,25 +202,25 @@ where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vect
 }
 
 %% Question Figure 4:
+% Replace these images with figures depicting the Validation Accuracy and Generalisation Gap for each of your experiments varying the Dropout inclusion rate, L1/L2 weight penalty, and for the 8 combined experiments (you will have to find a way to best display this information in one subfigure).
 \newcommand{\questionFigureFour} {
-\youranswer{Question Figure 4 - Replace these images with figures depicting the Validation Accuracy and Generalisation Gap for each of your experiments varying the Dropout inclusion rate, L1/L2 weight penalty, and for the 8 combined experiments (you will have to find a way to best display this information in one subfigure).
-%
+\youranswer{
 \begin{figure*}[t]
     \centering
     \begin{subfigure}{.3\linewidth}
-        \includegraphics[width=\linewidth]{figures/empty_dropout_plot.png}
+        \includegraphics[width=0.85\linewidth]{figures/dropout_plot.pdf}
         \caption{Metrics by inclusion rate}
         \label{fig:dropoutrates}
     \end{subfigure} 
     \begin{subfigure}{.3\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/empty_wd_plot.png}
+        \includegraphics[width=0.85\linewidth]{figures/wd_plot.pdf}
         \caption{Metrics by weight penalty}
         \label{fig:weightrates}
     \end{subfigure} 
-    \begin{subfigure}{.3\linewidth}
+    \begin{subfigure}{.39\linewidth}
         \centering
-        \includegraphics[width=.85\linewidth]{example-image-duck}
+        \includegraphics[width=0.85\linewidth]{figures/dropout_wd_plot.pdf}
         \caption{Extra experiments}
         \label{fig:extra}
     \end{subfigure} 
@@ -222,6 +229,7 @@ where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vect
 \end{figure*}
 }
 }
+%rr
 
 %% - - - - - - - - - - - - TABLES - - - - - - - - - - - - 
 
@@ -234,9 +242,9 @@ where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vect
     \toprule
         \# hidden units & val. acc. & generalization gap \\
     \midrule
-         32            &     0.78       &      0.04              \\
-         64            &     0.81       &      0.05              \\
-         128           &     0.80       &      0.14              \\
+         32            &     0.782  &      0.045         \\
+         64            &     0.810  &      0.053         \\
+         128           &     0.807  &      0.141         \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and generalization gap (in terms of cross-entropy error) for varying network widths on the EMNIST dataset.}
@@ -254,9 +262,9 @@ where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vect
     \toprule
         \# hidden layers & val. acc. & generalization gap \\
     \midrule
-         1               & 0.78      & 0.04               \\
-         2               & 0.81      & 0.07               \\
-         3               & 0.80      & 0.14               \\
+         1               & 0.789      & 0.043             \\
+         2               & 0.815      & 0.071             \\
+         3               & 0.803      & 0.144              \\
     \bottomrule
     \end{tabular}
     \caption{Validation accuracy (\%) and generalization gap (in terms of cross-entropy error) for varying network depths on the EMNIST dataset.}
@@ -292,15 +300,15 @@ where $E(y,\hat{y})$ is an arbitrary error function, and $w$ is a parameter vect
         \multirow{3}*{L2 penalty}  
               & 1e-4                     &               0.832 &             0.106 \\
               & 1e-3                     &      \textit{0.855} &             0.035 \\
-              & 1e-1                     &               0.648 &    \textit{-0.01} \\
+              & 1e-1                     &               0.648 &    \textbf{-0.01} \\
     \midrule
         \multirow{6}*{Combined}  
               & 0.7, L1 1e-4             &               0.826 &             0.006 \\
-              & ?, ?                     &                     &                   \\
-              & ?, ?                     &                     &                   \\
-              & ?, ?                     &                     &                   \\
-              & ?, ?                     &                     &                   \\
-              & ?, ?                     &                     &                   \\
+              & 0.9, L1 1e-4             &               0.855 &             0.014 \\
+              & 0.9, L2 1e-3             &      \textbf{0.858} &             0.012 \\
+              & 0.7, L2 1e-3             &               0.826 &             0.004 \\
+              & 0.9, L1 1e-3             &               0.784 &             0.003 \\
+              & 0.95, L1 1e-3            &               0.802 &    \textit{0.002} \\
     \bottomrule
     \end{tabular}
     \caption{Results of all hyperparameter search experiments. \emph{italics} indicate the best results per series and \textbf{bold} indicate the best overall}
