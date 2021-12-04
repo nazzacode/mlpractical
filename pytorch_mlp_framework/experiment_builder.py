@@ -143,28 +143,24 @@ class ExperimentBuilder(nn.Module):
     
     def plot_grad_flow(self, named_parameters):
         """
-        The function is being called in Line 298 of this file. 
-        Receives the parameters of the model being trained. Returns plot of gradient flow for the given model parameters.
-       
+        The function is being called in Line 298 of this file.
+        Receives the parameters of the model being trained.
+        Returns plot of gradient flow for the given model parameters.
         """
         all_grads = []
         layers = []
-        
-        """
-        Complete the code in the block below to collect absolute mean of the gradients for each layer in all_grads with the             layer names in layers.
-        """
-        ########################################
-        
-        
-        ########################################
-            
-        
+        for name, values in named_parameters:
+            if not 'bias' in  name:
+                all_grads.append(torch.mean(values).item())
+                # shorten name to match example
+                # layers.append('_'.join([name.split('.')[i] for i in [-2,3]]))
+                layers.append(name.replace('layer_dict.','').replace('.weight', ''))
+                # layers.append(name)
+
         plt = self.plot_func_def(all_grads, layers)
-        
-        return plt
-    
-    
-    
+
+        return plt 
+     
     
     def run_train_iter(self, x, y):
         
