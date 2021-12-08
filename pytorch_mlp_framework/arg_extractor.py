@@ -19,7 +19,8 @@ def get_args():
         description='Welcome to the MLP course\'s Pytorch training and inference helper script')
 
     parser.add_argument('--batch_size', nargs="?", type=int, default=100, help='Batch_size for experiment')
-    parser.add_argument('--continue_from_epoch', nargs="?", type=int, default=-1, help='Epoch you want to continue training from while restarting an experiment')
+    parser.add_argument('--continue_from_epoch', nargs="?", type=int, default=-1, help='''Epoch you want 
+    to continue training from while restarting an experiment''')
     parser.add_argument('--seed', nargs="?", type=int, default=7112018,
                         help='Seed to use for random number generator for experiment')
     parser.add_argument('--image_num_channels', nargs="?", type=int, default=3,
@@ -48,6 +49,13 @@ def get_args():
     parser.add_argument('--block_type', type=str, default='conv_block',
                         help='Type of convolutional blocks to use in our network '
                              '(This argument will be useful in running experiments to debug your network)')
+    # Added as part of mlpractical Coursework 2
+    parser.add_argument('--batchnorm', nargs="?", type=str2bool, default=True,
+                        help='whether to Batch Normalise the layers of our network')
+    parser.add_argument('--residual_connections', nargs="?", type=str2bool, default=False,
+                        help='''whether to add residual connections (aka. Residual Network, ResNet) to
+     each 2-layer blocks in the network''')
+
     args = parser.parse_args()
     print(args)
     return args

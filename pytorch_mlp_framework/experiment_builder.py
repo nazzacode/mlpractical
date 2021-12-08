@@ -150,12 +150,10 @@ class ExperimentBuilder(nn.Module):
         all_grads = []
         layers = []
         for name, values in named_parameters:
-            if not 'bias' in  name:
-                all_grads.append(torch.mean(values).item())
-                # shorten name to match example
-                # layers.append('_'.join([name.split('.')[i] for i in [-2,3]]))
-                layers.append(name.replace('layer_dict.','').replace('.weight', ''))
-                # layers.append(name)
+            if all([not keyword in name for keyword in ['bias', 'bn']]):  # TODO add keyword for resnet
+                all_grads.append(torch.mean(torch.abs(values.grad)).item())
+                # regex layer names to match given example
+                layers.append(name.replace('layer_dict.','').replace('.weight', '').replace('.','_'))
 
         plt = self.plot_func_def(all_grads, layers)
 

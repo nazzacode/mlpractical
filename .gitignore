@@ -1,3 +1,9 @@
+# untracking large files
+#*tar.gz
+#*npz
+#data/cifar-100-python/train
+data/
+
 #dropbox stuff
 *.dropbox*
 .idea/*

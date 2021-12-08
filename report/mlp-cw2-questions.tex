@@ -1,8 +1,6 @@
 %% REPLACE sXXXXXXX with your student number
 \def\studentNumber{s1869292}
 
-
-
 %% START of YOUR ANSWERS
 %% Add answers to the questions below, by replacing the text inside the brackets {} for \youranswer{ "Text to be replaced with your answer." }. 
 %
@@ -23,36 +21,88 @@
 
 %% - - - - - - - - - - - - TEXT QUESTIONS - - - - - - - - - - - - 
 
-%% Question 1:
+%% Question 1: Use Figures 1, 2, and 3 to identify the Vanishing Gradient Problem (which of these model suffers from it, and what are the consequences depicted?). [1/5 of the columns in a 2-column page]
 \newcommand{\questionOne} {
-\youranswer{Question 1 - Use Figures 1, 2, and 3 to identify the Vanishing Gradient Problem (which of these model suffers from it, and what are the consequences depicted?).
-
-The average length for an answer to this question is approximately 1/5 of the columns in a 2-column page}
+  \youranswer{Figure~\ref{fig:grad_flow_08} shows a ``healthy'' gradient flow for VGG08, meanwhile in Figure~\ref{fig:grad_flow_38} we see a prototypical case of the Vanishing Gradient Problem for VGG38. Looking from the output layer (right), leftwards, we see the gradient quickly 'vanishing'; completely undetectable around layer 36 (three from output). The consequnece is shown in the Figure~\ref{fig:curves} training curves, where, VGG08 trains successfully, whereas VGG38 does not even manage to train poorly; it has completely stopped the network from training, ergo no improvement is made from its random initialisation. This totalising obstruction of the Vanishing Gradient Problem historically contributed to why early Deep Neural Networks were not feasible.
+  }
 }
 
 %% Question 2:
+%% Describe Batch Normalization (BN) by using equations. Consider both training and test time and explain how BN addresses the vanishing gradient problem. Note that you are not required to provide the derivation of gradients w.r.t. weights for BN weights. [2/3 of a column in a 2-column page]
 \newcommand{\questionTwo} {
-\youranswer{Question 2 - Describe Batch Normalization (BN) by using equations. Consider both training and test time and explain how BN addresses the vanishing gradient problem. Note that you are not required to provide the derivation of gradients w.r.t. weights for BN weights.
+%% TODO cut down?
+  \youranswer{
+    As discussed in Section~\ref{sec:lit_rev}, the Batch Normalisation method (1) normalises\footnote{Sets $\mu=1$ and $\sigma^2=1$, where $\mu$ is the mean and $\sigma^2$ is the varience.} the inputs to a layer for each mini-batch, then (2) uses two new parameters, $\beta$ and $\gamma$, to respectively shift (the mean) and scale (the varience); these are learnt during training, and (3) updates the backprop algorithm to account for the transformed inputs.
 
-The average length of an answer to this question would be around 2/3 of a column in a 2-column page}
+    Concretely for a layer $x$ of a network, where $x_{i}^{(k)}$ represents the $k^{th}$ dimension of $x$ for the  $i^{th}$ training example, we have
+    \begin{equation}
+      \hat{x}_{i}^{(k)}=\frac{x_{i}^{(k)}-\mu_{B}^{(k)}}{\sqrt{\sigma_{B}^{(k)^{2}}+\epsilon}}
+    \end{equation}
+    where $\mu_{B}^{(k)}$ and $\sigma_{B}^{(k)^{2}}$ are respectively the $k^{th}$ dimension's mean and variance (for batch $B$) and $\epsilon$ is an arbitrarily small constant added to preventing a division by zero.
+
+    The normalisation is then  followed with the rescaling,
+
+    \begin{equation}
+      y_{i}^{(k)}=\gamma^{(k)} \hat{x}_{i}^{(k)}+\beta^{(k)}
+    \end{equation}
+
+    where $\gamma^{(k)}$, the new mean and $\beta^{(k)}$, the new variance are learned along with the network weights and biases in the ongoing optimisation process. Generally $\beta$ is initialised to 0 and $\gamma$ to 1. This step allows the model to restore its full representational power.
+
+    Overall we have the batchnorm transform,
+
+    \begin{equation}
+    B N_{\gamma^{(k)}, \beta^{(k)}}: x_{i}^{(k)} \rightarrow y_{i}^{(k)}
+    \end{equation}
+
+    where $m$ is the number of training examples in a mini-batch. Note that $\hat{x}_{i}^{(k)}$ stays internal to the specific layer.
+
+    Finally, the numerous derivations for the back propagation step can be found on page 4 of~\citet{ioffe2015batch}.
+
+    Although Batch Normalisation was not designed specifically to combat the VGP, it is a powerful normalisation and regularisation technique with many use cases. One way it addresses the VGP is by transforming the input to a range that will result a healthy set of gradients for activation functions that 'prefer' inputs within a specified range. For example, the Sigmoid function returns minuscule gradients for numbers of moderately large absolute value (say $\pm3$) and beyond. Its worth noting that batchnorm's lone effectiveness is limited for very deep networks (especially with squishifying activation functions) as repeated multiplication (as taken in gradient backprop) of values less that $|1|$, will tend towards zero
+    % * ? Training/ Test Time
+  }
 }
 
-%% Question 3:
+%% Question 3: Describe Residual Connections (RC) by using equations. Consider both training and test time and explain how RC address the vanishing gradient problem. [1/2 of a column in a 2-column page]
 \newcommand{\questionThree} {
-\youranswer{Question 3 - Describe Residual Connections (RC) by using equations. Consider both training and test time and explain how RC address the vanishing gradient problem.
+  \youranswer{
+    ResNets overcome the tendency of networks to degrade in performance\footnote{training performance included; ergo the model is not suffering from overfitting.} past a certain depth (classically 15-30 layers). Residual neural networks do this by utilising skip connections, or shortcuts to jump over some layers.
 
-The average length of an answer to this question would be around 1/2 of a column in a 2-column page}
+    % TODO image?
+    Formally, given a weight matrix of the form $W^{\ell-k, \ell}$ connecting layer $\ell-k$ to $\ell$ (in our experiments we have stuck to $k=2$), the forwardprop step of our ResNet block is written,
+
+    \begin{equation}
+    \begin{aligned}
+      y^{\ell} &:=g\left((W^{\ell-1, \ell} \cdot y^{\ell-1}+b^{\ell}) + y^{\ell-k} \right) \\
+            &=g\left(\mathcal{F}^{\ell} + y^{\ell-k}\right)
+    \end{aligned}
+    \end{equation}
+
+    where $y^{\ell}$ is the output of layer $\ell$, $g$ is the activation function,
+    $W^{\ell-k, \ell}$ the weight matrix connecting layer $\ell-k$ to $\ell$ and $\mathcal{F}^{\ell}(=W^{\ell-1, \ell} \cdot y^{\ell-1}+b^{\ell})$ is the standard connection before introduction of the shortcut. Note $\mathcal{F}^{\ell}+y^{\ell-k}$ is performed by element-wise addition. If the dimensions of the layers $\ell-k$ and $\ell$ are not equal, we perform a linear projection onto the new dimension.
+
+    A major benefit of ResNets is that they add no parameters or computational complexity. Similarly, the back propagation step is the same for both standard and skipped pathways, essentially unchanged from its classical formulation,
+
+    \begin{equation}
+    \begin{aligned}
+      \Delta w^{\ell-k, \ell}:&=-\eta \frac{\partial E^{\ell}}{\partial w^{\ell-k, \ell}}\\
+                  &=-\eta y^{\ell-k} \cdot \delta^{\ell}
+    \end{aligned}
+    \end{equation}
+
+    where $\eta$ is the learning rate, $y^{\ell}$ the output from layer $\ell$, and $\delta^{\ell}$ the error at layer $\ell$. As back propagation is of the same form for both the standard and skipped path, the weight matrices are merged and learned in one step (at no additional cost)
+  }
 }
 
-%% Question 4:
-\newcommand{\questionFour} {
-\youranswer{Question 4 - Present and discuss the experiment results (all of the results and not just the ones you had to fill in) in Table 1 and Figures 4 and 5 (you may use any of the other Figures if you think they are relevant to your analysis). You will have to determine what data are relevant to the discussion, and what information can be extracted from it. Also, discuss what further experiments you would have ran on any combination of VGG08, VGG38, BN, RC in order to
-\begin{itemize}
-    \item Improve performance of the model trained (explain why you expect your suggested experiments will help with this).
-    \item Learn more about the behaviour of BN and RC (explain what you are trying to learn and how).
-\end{itemize}
 
-The average length for an answer to this question is approximately 1 of the columns in a 2-column page}
+%% Question 4: Present and discuss the experiment results (all of the results and not just the ones you had to fill in) in Table 1 and Figures 4 and 5 (you may use any of the other Figures if you think they are relevant to your analysis). You will have to determine what data are relevant to the discussion, and what information can be extracted from it. Also, discuss what further experiments you would have ran on any combination of VGG08, VGG38, BN, RC in order to,
+%%       \item Improve performance of the model trained (explain why you expect your suggested experiments will help with this).
+%%       \item Learn more about the behaviour of BN and RC (explain what you are trying to learn and how).
+%% [1 of the columns in a 2-column page]
+\newcommand{\questionFour} {
+  \youranswer{
+    * Here we go....
+  }
 }
 
 %% Question 5:
@@ -71,16 +121,16 @@ The length of this question description is indicative of the average length of a
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
 
 %% Question Figure 3:
+%% Replace this image with a figure depicting the average gradient across layers, for the VGG38 model.
 \newcommand{\questionFigureThree} {
-\youranswer{Question Figure 3 - Replace this image with a figure depicting the average gradient across layers, for the VGG38 model.
-%
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{example-image-duck}
-    \caption{Gradient Flow on VGG38}
-    \label{fig:grad_flow_38}
-\end{figure}
-}
+  \youranswer{
+    \begin{figure}[t]
+        \centering
+        \includegraphics[width=\linewidth]{../VGG_38_experiment/saved_models/gradient_flow_plots/epoch99.pdf}
+        \caption{Gradient Flow on VGG38}
+        \label{fig:grad_flow_38}
+    \end{figure}
+  }
 }
 
 %% Question Figure 4:

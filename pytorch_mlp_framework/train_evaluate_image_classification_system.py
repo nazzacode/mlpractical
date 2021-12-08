@@ -41,28 +41,39 @@ train_data_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=T
 val_data_loader = DataLoader(val_data, batch_size=args.batch_size, shuffle=True, num_workers=4)
 test_data_loader = DataLoader(test_data, batch_size=args.batch_size, shuffle=True, num_workers=4)
 
+# Choose processing and dim_reduction
 if args.block_type == 'conv_block':
-    processing_block_type = ConvolutionalProcessingBlock
-    dim_reduction_block_type = ConvolutionalDimensionalityReductionBlock
+    processing_block_type = ConvolutionalProcessingBlock_
+    dim_reduction_block_type = ConvolutionalDimensionalityReductionBlock_
 elif args.block_type == 'empty_block':
     processing_block_type = EmptyBlock
     dim_reduction_block_type = EmptyBlock
 else:
     raise ModuleNotFoundError
 
-custom_conv_net = ConvolutionalNetwork(  # initialize our network object, in this case a ConvNet
+# initialize our network object, in this case a ConvNet
+custom_conv_net = ConvolutionalNetwork(  
     input_shape=(args.batch_size, args.image_num_channels, args.image_height, args.image_width),
     num_output_classes=args.num_classes, num_filters=args.num_filters, use_bias=False,
     num_blocks_per_stage=args.num_blocks_per_stage, num_stages=args.num_stages,
     processing_block_type=processing_block_type,
-    dimensionality_reduction_block_type=dim_reduction_block_type)
+    dimensionality_reduction_block_type=dim_reduction_block_type,
+    batchnorm=args.batchnorm,
+    residual_connections=args.residual_connections
+)
 
-conv_experiment = ExperimentBuilder(network_model=custom_conv_net,
-                                    experiment_name=args.experiment_name,
-                                    num_epochs=args.num_epochs,
-                                    weight_decay_coefficient=args.weight_decay_coefficient,
-                                    use_gpu=args.use_gpu,
-                                    continue_from_epoch=args.continue_from_epoch,
-                                    train_data=train_data_loader, val_data=val_data_loader,
-                                    test_data=test_data_loader)  # build an experiment object
-experiment_metrics, test_metrics = conv_experiment.run_experiment()  # run experiment and return experiment metrics
+# build an experiment object
+conv_experiment = ExperimentBuilder(
+    network_model=custom_conv_net,
+    experiment_name=args.experiment_name,
+    num_epochs=args.num_epochs,
+    weight_decay_coefficient=args.weight_decay_coefficient,
+    use_gpu=args.use_gpu,
+    continue_from_epoch=args.continue_from_epoch,
+    train_data=train_data_loader, val_data=val_data_loader,
+    test_data=test_data_loader
+)  
+
+# run experiment and return experiment metrics
+experiment_metrics, test_metrics = conv_experiment.run_experiment()  
+

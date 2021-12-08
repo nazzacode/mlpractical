@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.modules import batchnorm
 
 
 class FCCNetwork(nn.Module):
@@ -80,6 +81,7 @@ class FCCNetwork(nn.Module):
 class EmptyBlock(nn.Module):
     def __init__(self, input_shape=None, num_filters=None, kernel_size=None, padding=None, bias=None, dilation=None,
                  reduction_factor=None):
+        # TODO account for new arguments
         super(EmptyBlock, self).__init__()
 
         self.num_filters = num_filters
@@ -203,7 +205,7 @@ class ConvolutionalDimensionalityReductionBlock(nn.Module):
     def build_module(self):
         self.layer_dict = nn.ModuleDict()
         x = torch.zeros(self.input_shape)
-        out = x
+        out = x 
 
         self.layer_dict['conv_0'] = nn.Conv2d(in_channels=out.shape[1], out_channels=self.num_filters, bias=self.bias,
                                               kernel_size=self.kernel_size, dilation=self.dilation,
@@ -236,37 +238,170 @@ class ConvolutionalDimensionalityReductionBlock(nn.Module):
 
         return out
 
+class ConvolutionalProcessingBlock_(nn.Module):
+    """
+    Design Decision Justifications
+    TODO why out -> x_shape
+    TODO why dict change
+    """
+    def __init__(self, input_shape, num_filters, kernel_size, padding, bias, dilation, batchnorm, 
+     residual_connections):
+     # TODO why is docstring here giving me error?
+        super(ConvolutionalProcessingBlock_, self).__init__()
+        self.num_filters = num_filters
+        self.kernel_size = kernel_size
+        self.input_shape = input_shape
+        self.padding = padding
+        self.bias = bias
+        self.dilation = dilation 
+        self.batchnorm = batchnorm
+        self.residual_connections = residual_connections
+        self.build_module()
+
+
+    def build_module(self):
+        x_shape = torch.zeros(self.input_shape)
+
+        self.layer_dict = nn.ModuleDict({ 
+            'conv_0': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
+                         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
+                         padding=self.padding, stride=1),
+            'conv_1': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
+                         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
+                         padding=self.padding, stride=1),
+            'bn_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]),
+            # 'rc_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]), # TODO
+        })        
+
+        # for i in range(2):
+        x_shape = self.layer_dict['conv_0'].forward(x_shape)
+        if self.batchnorm:
+            x_shape = self.layer_dict['bn_0'].forward(x_shape)
+        x_shape = F.leaky_relu(x_shape)
+
+        x_shape = self.layer_dict['conv_1'].forward(x_shape)
+        if self.batchnorm:
+            x_shape = self.layer_dict['bn_0'].forward(x_shape)
+        x_shape = F.leaky_relu(x_shape)
+
+        print(x_shape.shape)
+
+    def forward(self, x):
+        x = self.layer_dict['conv_0'].forward(x)
+        if self.batchnorm:
+            x = self.layer_dict['bn_0'].forward(x)
+        x = F.leaky_relu(x)
+
+        x = self.layer_dict['conv_1'].forward(x)
+        if self.batchnorm:
+            x = self.layer_dict['bn_0'].forward(x)
+        x = F.leaky_relu(x)
+
+        return x
+
+
+class ConvolutionalDimensionalityReductionBlock_(nn.Module):
+    def __init__(self, input_shape, num_filters, kernel_size, padding, bias, dilation, reduction_factor,
+     batchnorm, residual_connections):
+        super(ConvolutionalDimensionalityReductionBlock_, self).__init__()
+
+        self.num_filters = num_filters
+        self.kernel_size = kernel_size
+        self.input_shape = input_shape
+        self.padding = padding
+        self.bias = bias
+        self.dilation = dilation
+        self.reduction_factor = reduction_factor
+        self.batchnorm = batchnorm
+        self.residual_connections = residual_connections
+
+        self.build_module()
+
+
+    def build_module(self):
+        self.layer_dict = nn.ModuleDict()
+        x_shape = torch.zeros(self.input_shape)
+
+        self.layer_dict['conv_0'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
+         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, stride=1)
+        self.layer_dict['bn_0'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
+
+        x_shape = self.layer_dict['conv_0'].forward(x_shape)
+        if self.batchnorm:
+            x_shape = self.layer_dict['bn_0'].forward(x_shape)
+        x_shape = F.leaky_relu(x_shape)
+
+        x_shape = F.avg_pool2d(x_shape, self.reduction_factor)
+
+        self.layer_dict['conv_1'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
+         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, 
+         stride=1)
+        self.layer_dict['bn_1'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
+
+        x_shape = self.layer_dict['conv_1'].forward(x_shape)
+        if self.batchnorm:
+            x_shape = self.layer_dict['bn_1'].forward(x_shape)
+        x_shape = F.leaky_relu(x_shape)
+
+        print(x_shape.shape)
+
+
+    def forward(self, x):
+        out = x
+
+        out = self.layer_dict['conv_0'].forward(out)
+        if self.batchnorm:
+            x = self.layer_dict['bn_0'].forward(x)
+        out = F.leaky_relu(out)
+
+        out = F.avg_pool2d(out, self.reduction_factor)
+
+        out = self.layer_dict['conv_1'].forward(out)
+        if self.batchnorm:
+            x = self.layer_dict['bn_0'].forward(x)
+        out = F.leaky_relu(out)
+
+        return out
+
 
 class ConvolutionalNetwork(nn.Module):
-    def __init__(self, input_shape, num_output_classes, num_filters,
-                 num_blocks_per_stage, num_stages, use_bias=False, processing_block_type=ConvolutionalProcessingBlock,
-                 dimensionality_reduction_block_type=ConvolutionalDimensionalityReductionBlock):
+    def __init__(self, input_shape, num_output_classes, num_filters, num_blocks_per_stage, num_stages,
+     batchnorm, residual_connections, use_bias=False, processing_block_type=ConvolutionalProcessingBlock, 
+     dimensionality_reduction_block_type=ConvolutionalDimensionalityReductionBlock):
         """
         Initializes a convolutional network module
         :param input_shape: The shape of the tensor to be passed into this network
         :param num_output_classes: Number of output classes
         :param num_filters: Number of filters per convolutional layer
-        :param num_blocks_per_stage: Number of blocks per "stage". Each block is composed of 2 convolutional layers.
-        :param num_stages: Number of stages in a network. A stage is defined as a sequence of layers within which the
-        data dimensionality remains constant in the spacial axis (h, w) and can change in the channel axis. After each stage
-        there exists a dimensionality reduction stage, composed of two convolutional layers and an avg pooling layer.
+        :param num_blocks_per_stage: Number of blocks per "stage". Each block is composed of 2 
+         convolutional layers.
+        :param num_stages: Number of stages in a network. A stage is defined as a sequence of layers
+         within which the data dimensionality remains constant in the spacial axis (h, w) and can change
+         in the channel axis. After each stage there exists a dimensionality reduction stage, composed
+         of two convolutional layers and an avg pooling layer.
+        :param batchnorm: Whether to use batch normalistion on the layers
+        :param residual_connections: Whether to use residual connections on each block
         :param use_bias: Whether to use biases in our convolutional layers
         :param processing_block_type: Type of processing block to use within our stages
-        :param dimensionality_reduction_block_type: Type of dimensionality reduction block to use after each stage in our network
+        :param dimensionality_reduction_block_type: Type of dimensionality reduction block to use after
+         each stage in our network
         """
         super(ConvolutionalNetwork, self).__init__()
         # set up class attributes useful in building the network and inference
         self.input_shape = input_shape
-        self.num_filters = num_filters
         self.num_output_classes = num_output_classes
-        self.use_bias = use_bias
+        self.num_filters = num_filters
         self.num_blocks_per_stage = num_blocks_per_stage
         self.num_stages = num_stages
+        self.batchnorm = batchnorm
+        self.residual_connections = residual_connections
+        self.use_bias = use_bias
         self.processing_block_type = processing_block_type
         self.dimensionality_reduction_block_type = dimensionality_reduction_block_type
 
         # build the network
         self.build_module()
+
 
     def build_module(self):
         """
@@ -285,18 +420,16 @@ class ConvolutionalNetwork(nn.Module):
         # torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True)
         for i in range(self.num_stages):  # for number of layers times
             for j in range(self.num_blocks_per_stage):
-                self.layer_dict['block_{}_{}'.format(i, j)] = self.processing_block_type(input_shape=out.shape,
-                                                                                         num_filters=self.num_filters,
-                                                                                         bias=self.use_bias,
-                                                                                         kernel_size=3, dilation=1,
-                                                                                         padding=1)
+                self.layer_dict['block_{}_{}'.format(i, j)] = self.processing_block_type(
+                 input_shape=out.shape, num_filters=self.num_filters, bias=self.use_bias, kernel_size=3,
+                 dilation=1, padding=1, batchnorm=self.batchnorm, 
+                 residual_connections=self.residual_connections)
                 out = self.layer_dict['block_{}_{}'.format(i, j)].forward(out)
+
             self.layer_dict['reduction_block_{}'.format(i)] = self.dimensionality_reduction_block_type(
-                input_shape=out.shape,
-                num_filters=self.num_filters, bias=True,
-                kernel_size=3, dilation=1,
-                padding=1,
-                reduction_factor=2)
+             input_shape=out.shape, num_filters=self.num_filters, bias=True, kernel_size=3, dilation=1, 
+             padding=1, reduction_factor=2, batchnorm=self.batchnorm, 
+             residual_connections=self.residual_connections)
             out = self.layer_dict['reduction_block_{}'.format(i)].forward(out)
 
         out = F.avg_pool2d(out, out.shape[-1])
