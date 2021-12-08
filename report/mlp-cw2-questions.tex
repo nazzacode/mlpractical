@@ -79,7 +79,7 @@
     \end{equation}
 
     where $y^{\ell}$ is the output of layer $\ell$, $g$ is the activation function,
-    $W^{\ell-k, \ell}$ the weight matrix connecting layer $\ell-k$ to $\ell$ and $\mathcal{F}^{\ell}(=W^{\ell-1, \ell} \cdot y^{\ell-1}+b^{\ell})$ is the standard connection before introduction of the shortcut. Note $\mathcal{F}^{\ell}+y^{\ell-k}$ is performed by element-wise addition. If the dimensions of the layers $\ell-k$ and $\ell$ are not equal, we perform a linear projection onto the new dimension.
+    $W^{\ell-k, \ell}$ the weight matrix connecting layer $\ell-k$ to $\ell$ and $\mathcal{F}^{\ell}(=W^{\ell-1, \ell} \cdot y^{\ell-1}+b^{\ell})$ is the standard connection before introduction of the shortcut. Note $\mathcal{F}^{\ell}+y^{\ell-k}$ is performed by element-wise addition. If the dimensions of the layers $\ell-k$ and $\ell$ are not equal (as is common in convolution networks due to pooling), we do not add residual connections, however it would be possible to perform a linear projection onto the new dimensions as suggested in the original paper~\cite{he2016deep}.
 
     A major benefit of ResNets is that they add no parameters or computational complexity. Similarly, the back propagation step is the same for both standard and skipped pathways, essentially unchanged from its classical formulation,
 
@@ -178,7 +178,7 @@ Question Table 1 - Fill in Table 1 with the results from your experiments on
     \midrule
         VGG08                   & 1e-3 & 60 K      &  1.74      & 51.59     & 1.95     & 46.84 \\
         VGG38                   & 1e-3 & 336 K     &  4.61      & 00.01     & 4.61     & 00.01 \\
-        VGG38 BN                & 1e-3 &     ?     &     ?      &     ?     &    ?     &     ? \\
+        VGG38 BN                & 1e-3 & 339 K     &     ?      &     ?     &    ?     &     ? \\
         VGG38 RC                & 1e-3 & 336 K     &  1.33      & 61.52     & 1.84     & 52.32 \\
         VGG38 BN + RC           & 1e-3 & 339 K     &  1.26      & 62.99     & 1.73     & 53.76 \\
         VGG38 BN                & 1e-2 & 339 K     &  1.70      & 52.28     & 1.99     & 46.72 \\
