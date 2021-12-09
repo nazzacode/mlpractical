@@ -50,7 +50,7 @@ def get_args():
                         help='Type of convolutional blocks to use in our network '
                              '(This argument will be useful in running experiments to debug your network)')
     # Added as part of mlpractical Coursework 2
-    parser.add_argument('--batchnorm', nargs="?", type=str2bool, default=True,
+    parser.add_argument('--batchnorm', nargs="?", type=str2bool, default=False,
                         help='whether to Batch Normalise the layers of our network')
     parser.add_argument('--residual_connections', nargs="?", type=str2bool, default=False,
                         help='''whether to add residual connections (aka. Residual Network, ResNet) to
