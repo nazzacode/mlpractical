@@ -256,6 +256,7 @@ class ConvolutionalProcessingBlock_(nn.Module):
         self.dilation = dilation 
         self.batchnorm = batchnorm
         self.residual_connections = residual_connections
+
         self.build_module()
 
 
@@ -291,20 +292,24 @@ class ConvolutionalProcessingBlock_(nn.Module):
 
         self.layer_dict['conv_0'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
          bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, stride=1)
+
         x_shape = self.layer_dict['conv_0'].forward(x_shape)
 
         self.layer_dict['bn_0'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
+
         if self.batchnorm:
             x_shape = self.layer_dict['bn_0'].forward(x_shape)
-        x_shape = F.leaky_relu(x_shape)
 
+        x_shape = F.leaky_relu(x_shape)
 
         self.layer_dict['conv_1'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
          bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, 
          stride=1)
+
         x_shape = self.layer_dict['conv_1'].forward(x_shape)
 
         self.layer_dict['bn_1'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
+
         if self.batchnorm:
             x_shape = self.layer_dict['bn_1'].forward(x_shape)
 
@@ -321,7 +326,7 @@ class ConvolutionalProcessingBlock_(nn.Module):
 
         x = self.layer_dict['conv_1'].forward(x)
         if self.batchnorm:
-            x = self.layer_dict['bn_0'].forward(x)
+            x = self.layer_dict['bn_1'].forward(x)
         x = F.leaky_relu(x)
 
         return x
