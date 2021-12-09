@@ -260,31 +260,58 @@ class ConvolutionalProcessingBlock_(nn.Module):
 
 
     def build_module(self):
+        # x_shape = torch.zeros(self.input_shape)
+
+        # self.layer_dict = nn.ModuleDict({ 
+        #     'conv_0': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
+        #                  bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
+        #                  padding=self.padding, stride=1),
+        #     'conv_1': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
+        #                  bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
+        #                  padding=self.padding, stride=1), # TODO remove
+        #     'bn_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]),
+        #     # 'rc_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]), # TODO
+        # })        
+
+        # # for i in range(2):
+        # x_shape = self.layer_dict['conv_0'].forward(x_shape)
+        # if self.batchnorm:
+        #     x_shape = self.layer_dict['bn_0'].forward(x_shape)
+        # x_shape = F.leaky_relu(x_shape)
+
+        # x_shape = self.layer_dict['conv_1'].forward(x_shape)
+        # if self.batchnorm:
+        #     x_shape = self.layer_dict['bn_0'].forward(x_shape)
+        # x_shape = F.leaky_relu(x_shape)
+
+        # print(x_shape.shape)
+
+        self.layer_dict = nn.ModuleDict()
         x_shape = torch.zeros(self.input_shape)
 
-        self.layer_dict = nn.ModuleDict({ 
-            'conv_0': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
-                         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
-                         padding=self.padding, stride=1),
-            'conv_1': nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
-                         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, 
-                         padding=self.padding, stride=1),
-            'bn_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]),
-            # 'rc_0'  : nn.BatchNorm2d(num_features=x_shape.shape[1]), # TODO
-        })        
-
-        # for i in range(2):
+        self.layer_dict['conv_0'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters,
+         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, stride=1)
         x_shape = self.layer_dict['conv_0'].forward(x_shape)
+
+        self.layer_dict['bn_0'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
         if self.batchnorm:
             x_shape = self.layer_dict['bn_0'].forward(x_shape)
         x_shape = F.leaky_relu(x_shape)
 
+
+        self.layer_dict['conv_1'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
+         bias=self.bias, kernel_size=self.kernel_size, dilation=self.dilation, padding=self.padding, 
+         stride=1)
         x_shape = self.layer_dict['conv_1'].forward(x_shape)
+
+        self.layer_dict['bn_1'] = nn.BatchNorm2d(num_features=x_shape.shape[1])
         if self.batchnorm:
-            x_shape = self.layer_dict['bn_0'].forward(x_shape)
+            x_shape = self.layer_dict['bn_1'].forward(x_shape)
+
         x_shape = F.leaky_relu(x_shape)
 
         print(x_shape.shape)
+
 
     def forward(self, x):
         x = self.layer_dict['conv_0'].forward(x)
@@ -358,7 +385,7 @@ class ConvolutionalDimensionalityReductionBlock_(nn.Module):
 
         out = self.layer_dict['conv_1'].forward(out)
         if self.batchnorm:
-            x = self.layer_dict['bn_0'].forward(x)
+            x = self.layer_dict['bn_1'].forward(x)
         out = F.leaky_relu(out)
 
         return out
