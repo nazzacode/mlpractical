@@ -273,6 +273,7 @@ class ConvolutionalProcessingBlock_(nn.Module):
 
         if self.batchnorm:
             x_shape = self.layer_dict['bn_0'].forward(x_shape)
+
         x_shape = F.leaky_relu(x_shape)
 
         self.layer_dict['conv_1'] = nn.Conv2d(in_channels=x_shape.shape[1], out_channels=self.num_filters, 
