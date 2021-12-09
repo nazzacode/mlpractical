@@ -21,6 +21,7 @@
     "krizhevsky2009learning"
     "lecun2012efficient"
     "bishop1995neural"
-    "kolesnikov2020bigTransfer"))
+    "kolesnikov2020bigTransfer"
+    "hochreiter1991untersuchungen"))
  :bibtex)
 

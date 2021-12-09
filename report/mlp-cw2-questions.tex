@@ -22,25 +22,23 @@
 %% - - - - - - - - - - - - TEXT QUESTIONS - - - - - - - - - - - - 
 
 %% Question 1: Use Figures 1, 2, and 3 to identify the Vanishing Gradient Problem (which of these model suffers from it, and what are the consequences depicted?). [1/5 of the columns in a 2-column page]
-\newcommand{\questionOne} {
-  \youranswer{Figure~\ref{fig:grad_flow_08} shows a ``healthy'' gradient flow for VGG08, meanwhile in Figure~\ref{fig:grad_flow_38} we see a prototypical case of the Vanishing Gradient Problem for VGG38. Looking from the output layer (right), leftwards, we see the gradient quickly 'vanishing'; completely undetectable around layer 36 (three from output). The consequnece is shown in the Figure~\ref{fig:curves} training curves, where, VGG08 trains successfully, whereas VGG38 does not even manage to train poorly; it has completely stopped the network from training, ergo no improvement is made from its random initialisation. This totalising obstruction of the Vanishing Gradient Problem historically contributed to why early Deep Neural Networks were not feasible.
-  }
-}
+\newcommand{\questionOne}
+    {\youranswer{Figure~\ref{fig:grad_flow_08} shows a `healthy` gradient flow for VGG08, meanwhile in Figure~\ref{fig:grad_flow_38} we see a prototypical case of the Vanishing Gradient Problem for VGG38. Looking from the output layer (right), leftwards, we see the gradient quickly `vanishing`, completely undetectable withing three layers. The effect on training is shown in Figure~\ref{fig:curves}, where, VGG08 trains successfully, whereas VGG38 does not even manage to train poorly; it has completely stopped the network from training, ergo no improvement is made from its random initialisation. This totalising obstruction of the Vanishing Gradient Problem historically contributed to why early Deep Neural Networks were not feasible~\cite{hochreiter1991untersuchungen}}}
 
 %% Question 2:
 %% Describe Batch Normalization (BN) by using equations. Consider both training and test time and explain how BN addresses the vanishing gradient problem. Note that you are not required to provide the derivation of gradients w.r.t. weights for BN weights. [2/3 of a column in a 2-column page]
-\newcommand{\questionTwo} {
-%% TODO cut down?
-  \youranswer{
-    As discussed in Section~\ref{sec:lit_rev}, the Batch Normalisation method (1) normalises\footnote{Sets $\mu=1$ and $\sigma^2=1$, where $\mu$ is the mean and $\sigma^2$ is the varience.} the inputs to a layer for each mini-batch, then (2) uses two new parameters, $\beta$ and $\gamma$, to respectively shift (the mean) and scale (the varience); these are learnt during training, and (3) updates the backprop algorithm to account for the transformed inputs.
+\newcommand{\questionTwo}
+    {\youranswer{As discussed in Section~\ref{sec:lit_rev}, the Batch Normalisation method (1) normalises\footnote{Sets $\mu=1$ and $\sigma^2=1$, where $\mu$ is the mean and $\sigma^2$ is the varience.} the inputs to a layer for each mini-batch, then (2) uses two new parameters, $\beta$ and $\gamma$, to respectively shift (the mean) and scale (the varience); these are learnt during training, and (3) updates the backprop algorithm to account for the transformed inputs.
 
-    Concretely for a layer $x$ of a network, where $x_{i}^{(k)}$ represents the $k^{th}$ dimension of $x$ for the  $i^{th}$ training example, we have
+    Formally, for a layer $x$ of a network, where $x_{i}^{(k)}$ represents the $k^{th}$ dimension of $x$ for the  $i^{th}$ training example, we have
+
     \begin{equation}
       \hat{x}_{i}^{(k)}=\frac{x_{i}^{(k)}-\mu_{B}^{(k)}}{\sqrt{\sigma_{B}^{(k)^{2}}+\epsilon}}
     \end{equation}
-    where $\mu_{B}^{(k)}$ and $\sigma_{B}^{(k)^{2}}$ are respectively the $k^{th}$ dimension's mean and variance (for batch $B$) and $\epsilon$ is an arbitrarily small constant added to preventing a division by zero.
 
-    The normalisation is then  followed with the rescaling,
+    where $\mu_{B}^{(k)}$ and $\sigma_{B}^{(k)^{2}}$ are respectively the $k^{th}$ dimension's mean and variance (for batch $B$) and $\epsilon$ is an arbitrarily small constant added to prevent a division by zero.
+
+    This normalisation is then  followed with the rescaling,
 
     \begin{equation}
       y_{i}^{(k)}=\gamma^{(k)} \hat{x}_{i}^{(k)}+\beta^{(k)}
@@ -48,7 +46,7 @@
 
     where $\gamma^{(k)}$, the new mean and $\beta^{(k)}$, the new variance are learned along with the network weights and biases in the ongoing optimisation process. Generally $\beta$ is initialised to 0 and $\gamma$ to 1. This step allows the model to restore its full representational power.
 
-    Overall we have the batchnorm transform,
+    Overall we have the high-level `batchnormalising transform`
 
     \begin{equation}
     B N_{\gamma^{(k)}, \beta^{(k)}}: x_{i}^{(k)} \rightarrow y_{i}^{(k)}
@@ -58,7 +56,9 @@
 
     Finally, the numerous derivations for the back propagation step can be found on page 4 of~\citet{ioffe2015batch}.
 
-    Although Batch Normalisation was not designed specifically to combat the VGP, it is a powerful normalisation and regularisation technique with many use cases. One way it addresses the VGP is by transforming the input to a range that will result a healthy set of gradients for activation functions that 'prefer' inputs within a specified range. For example, the Sigmoid function returns minuscule gradients for numbers of moderately large absolute value (say $\pm3$) and beyond. Its worth noting that batchnorm's lone effectiveness is limited for very deep networks (especially with squishifying activation functions) as repeated multiplication (as taken in gradient backprop) of values less that $|1|$, will tend towards zero
+    Batch Normalisation was not designed specifically to combat the VGP, but it is a powerful normalisation and regularisation technique with many use cases. It addresses the VGP by transforming the input to a range that will result a healthy gradients.\footnote{This is especially true for activation functions that `prefer` inputs within a specified range such as the Sigmoid function which returns minuscule gradients for numbers of moderately large absolute value (say $\pm3$) and beyond.}
+
+
     % * ? Training/ Test Time
   }
 }

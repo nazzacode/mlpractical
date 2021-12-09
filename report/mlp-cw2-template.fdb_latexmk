@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex mlp-cw2-template"] 1639070209 "mlp-cw2-template.aux" "mlp-cw2-template.bbl" "mlp-cw2-template" 1639070210
+["bibtex mlp-cw2-template"] 1639088500 "mlp-cw2-template.aux" "mlp-cw2-template.bbl" "mlp-cw2-template" 1639089560
   "./icml2017.bst" 1638658808 27014 3bf38cf1c3514ce2660b1751e86eb994 ""
-  "mlp-cw2-template.aux" 1639070210 3986 449b240457057e525ca9f5247148ec2c "pdflatex"
-  "refs.bib" 1639065795 7172 3bdf03401a6dfaf4d94ff65bb4d08b06 ""
+  "mlp-cw2-template.aux" 1639089560 4095 5cbdc9fb1ef04c6491c8c0e52cadc819 "pdflatex"
+  "refs.bib" 1639088460 7406 6817517f6397f0fedd7cf38044aca619 ""
   (generated)
   "mlp-cw2-template.blg"
   "mlp-cw2-template.bbl"
-["pdflatex"] 1639070209 "mlp-cw2-template.tex" "mlp-cw2-template.pdf" "mlp-cw2-template" 1639070210
+["pdflatex"] 1639089559 "mlp-cw2-template.tex" "mlp-cw2-template.pdf" "mlp-cw2-template" 1639089560
   "../VGG_38_experiment/saved_models/gradient_flow_plots/epoch99.pdf" 1638730999 17781 d55d83b4d723c6d1f92190d43f142658 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1617738065 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1617738065 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -145,15 +145,15 @@
   "figures/accuracy_plot.pdf" 1638658808 15585 3b1ed00f1b3cd05a65e487fdfab68893 ""
   "figures/grad_flow_vgg08.pdf" 1638658808 17819 0b5b527cb311b4f1d22a98a88a00d37c ""
   "figures/loss_plot.pdf" 1638658808 16092 922e9b2400517d61456a771f55e2f37d ""
-  "mlp-cw2-questions.tex" 1639070206 14779 64af48db537829292b28efc0c56e2780 ""
-  "mlp-cw2-template.aux" 1639070210 3986 449b240457057e525ca9f5247148ec2c "pdflatex"
-  "mlp-cw2-template.bbl" 1639070209 3897 a7946618a23f546057d4260104c3785f "bibtex mlp-cw2-template"
-  "mlp-cw2-template.out" 1639070210 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "mlp-cw2-questions.tex" 1639089555 14761 339d765e40b61096de91d154e2150698 ""
+  "mlp-cw2-template.aux" 1639089560 4095 5cbdc9fb1ef04c6491c8c0e52cadc819 "pdflatex"
+  "mlp-cw2-template.bbl" 1639088500 4123 03be8f7f7aa1d6755ab7ef05c7ee7906 "bibtex mlp-cw2-template"
+  "mlp-cw2-template.out" 1639089559 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "mlp-cw2-template.tex" 1638893865 12126 47cf91e9d56dda11653afc7c1a6242d8 ""
   "mlp2021.sty" 1638658808 24081 017e536e72638c28ba568b6183a9a716 ""
   "mlp2021_includes.tex" 1638817755 1361 343e349431e4f30810d02917d8e8ca89 ""
   (generated)
-  "mlp-cw2-template.log"
   "mlp-cw2-template.out"
-  "mlp-cw2-template.aux"
   "mlp-cw2-template.pdf"
+  "mlp-cw2-template.log"
+  "mlp-cw2-template.aux"
