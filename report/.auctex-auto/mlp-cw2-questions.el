@@ -14,6 +14,7 @@
     "studentNumber")
    (LaTeX-add-labels
     "fig:grad_flow_38"
+    "fig:training_curves_bestModel"
     "fig:grad_flow_bestModel"
     "tab:CIFAR_results"))
  :latex)

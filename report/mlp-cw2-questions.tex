@@ -101,22 +101,21 @@
 %% [1 of the columns in a 2-column page]
 \newcommand{\questionFour} {
   \youranswer{
-    % present results
-    % discuss results
+    Our experiments confirm that both Batch Normalisation and Residual Connections are techniques that successfully address the Vanishing Gradients Problem, allowing our deeper model (VGG\_38 derivatives) to train and converge successfully. In direct comparison with each other, BN slightly outperformed RC on our default model settings achieving test accuracies of XX.X\% and XX.X\% respectively.
+
+    The overall best performing model of the ones we tested was VGG\_X8\_XX, with a test accuracy of XX.X\% and error of X.XX; all such results are shown in Table~\ref{tab:CIFAR_results}. Figures~\ref{fig:training_curves_bestModel} \&~\ref{fig:grad_flow_bestModel} show VGG\_X8\_XX's successful training curve and (non-zero) gradient flow respectively, demonstrating the ability of our methods to overcome vanishing gradients. Similar plots were achieved for all models involving BN and/or RC.
+
+    There are many further experiments we can run in looking to improve performance on the benchmark and learn more about the Vanishing Gradients Problem. Three simple changes would be to, (1) experiment further with learning rates beyond $1e-2$ and $1e-3$, (2) increase the number of layers in the network (especially considering the results in \citet{he2016deep} which suggest that ResNets mean that much deeper networks achieve state of the art performace), and (3) increase the number of training iterations; our deeper models were still improving (see Figure~\ref{fig:training_curves_bestModel}), note this would have the best results when combined with (2). Another obvious change would be to implement Residual Connections for the dimensionality reduction blocks as well as the standard ones as done in the original paper~\cite{he2016deep}. For generalisation we should also test our models on other benchmarks given more compute resources.
+
+    The main purpose of this paper was to demonstrate simple methods to alleviate the Vanishing gradients problem, as a result we did not go after state of the art (SOTA) performace. In future it might want to research into implement some SOTA models for this and similar image classification benchmarks to see if they have tackled the vanishing gradient problem with greater success or in novel ways. For example \citet{kolesnikov2020bigTransfer} demonstrate a SOTA model based on the original ResNet architecture.
   }
 }
 
-%% Question 5:
+%% Question 5 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?) and conclude your report with a recommendation for future work.
 \newcommand{\questionFive} {
-\youranswer{Question 5 - Briefly draw your conclusions based on the results from the previous sections (what are the take-away messages?) and conclude your report with a recommendation for future work. 
-
-Good recommendations for future work also draw on the broader literature (the papers already referenced are good starting points). Great recommendations for future work are not just incremental (an example of an incremental suggestion would be: "we could also train with different learning rates") but instead also identify meaningful questions or, in other words, questions with answers that might be somewhat more generally applicable. 
-
-For example, \citep{huang2017densely} end with \begin{quote}``Because of their compact internal representations and reduced feature redundancy, DenseNets may be good feature extractors for various computer vision tasks that build on convolutional features, e.g.,  [4,5].''\end{quote} 
-
-while \cite{bengio1993problem} state in their conclusions that \begin{quote}``There remains theoretical questions to be considered,  such as whether the problem with simple gradient descent  discussed in this paper would be observed with  chaotic attractors that are not  hyperbolic.\\\end{quote}
-
-The length of this question description is indicative of the average length of a conclusion section}
+\youranswer{
+  Our research successfully demonstrated the ability of Batch Normalisation and Residual Connections (ResNets) to combat the Vanishing Gradient problem. The mechanistic account of these methods suggest that they are highly generalisable and we would expect them to be good candidates for improving performace in a variety of other situations. Going forward it is not clear that we have vanquished the negative effects of vanishing gradients entirely and .....
+  }
 }
 
 %% - - - - - - - - - - - - FIGURES - - - - - - - - - - - - 
@@ -142,7 +141,7 @@ The length of this question description is indicative of the average length of a
     \centering
     \includegraphics[width=\linewidth]{example-image-duck}
     \caption{Training curves for ? ? ?}
-    \label{fig:grad_flow_bestModel}
+    \label{fig:training_curves_bestModel}
 \end{figure}
 }
 }
